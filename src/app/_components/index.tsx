@@ -1,87 +1,109 @@
 "use client"
 
-import { ZoomMtg } from "@zoom/meetingsdk"
-import Image from "next/image"
+import { useEffect } from "react"
+import { useGetSignature } from "../_hooks"
 
-ZoomMtg.preLoadWasm()
-ZoomMtg.prepareWebSDK()
+const leaveUrl = "http://localhost:3000/en/test"
+const meetingNumber = 86857530517
+const password = "45qq4a"
+const client_id = "qDflymgPSCSuGSlJ_bg5Bw"
+const client_secret = "U6dB0icEBRlsqrByoOgM1D7XvlX3wYsz"
+
+const initZoom = async () => {
+  const { ZoomMtg } = await import("@zoom/meetingsdk")
+  ZoomMtg.setZoomJSLib("https://source.zoom.us/3.6.0/lib", "/av")
+  ZoomMtg.preLoadWasm()
+  ZoomMtg.prepareWebSDK()
+  ZoomMtg.i18n.load("en-US")
+
+  return ZoomMtg
+}
 
 function Zoom() {
-  var leaveUrl = "http://localhost:3000"
-  const meetingNumber = "85641717157"
-  const password = "h3pz0g"
-  const client_id = process.env.ZOOM_CLIENT_ID ?? ""
-  const client_secret = process.env.ZOOM_CLIENT_SECRET ?? ""
+  const { mutateAsync } = useGetSignature()
 
-  function getSignature() {
-    ZoomMtg.generateSDKSignature({
-      sdkKey: client_id,
-      sdkSecret: client_secret,
-      meetingNumber: meetingNumber, // meeting number
-      role: "0", // 1: host, 0: attendee
-      success: (e: string) => {
-        startMeeting(e)
-        console.log("success", e)
-      },
-      error: (err: any) => console.log(err),
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    initZoom().then(async (ZoomMtg) => {
+      const signature = await mutateAsync({
+        meetingNumber: `${meetingNumber}`,
+        role: "1",
+      })
+
+      if (signature?.data) {
+        startMeeting(ZoomMtg, signature?.data)
+      }
+
+      // generateSignature(ZoomMtg)
     })
-  }
 
-  function startMeeting(signature: string) {
-    const zoomelement = document.getElementById("zmmtg-root")
-    if (zoomelement) {
-      zoomelement.style.display = "block"
+    return () => {
+      null
+    }
+  }, [])
+
+  // const generateSignature = (ZoomMtg: any) => {
+  //   ZoomMtg.generateSDKSignature({
+  //     sdkKey: client_id,
+  //     sdkSecret: client_secret,
+  //     meetingNumber: meetingNumber, // meeting number
+  //     role: "0", // 1: host, 0: attendee
+  //     success: (e: string) => {
+  //       startMeeting(ZoomMtg, e)
+  //       console.log("success", e)
+  //     },
+  //     error: (err: any) => console.log(err),
+  //   })
+  // }
+
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  function startMeeting(ZoomMtg: any, signature: string) {
+    const zoomElement = document.getElementById("zmmtg-root")
+    if (zoomElement) {
+      zoomElement.style.display = "block"
     }
 
     ZoomMtg.init({
       leaveUrl: leaveUrl,
       patchJsMedia: false,
+
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       success: (success: any) => {
-        console.log(success, "initialized vayo hai")
+        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+        console.log(success, "initialized vayo hai", signature)
 
         ZoomMtg.join({
-          signature: signature,
           sdkKey: client_id,
-
-          passWord: password,
           meetingNumber: meetingNumber,
-          userName: "test",
-          userEmail: "test@gmail.com",
+          signature: signature,
+
+          userName: "hari bahadur",
+          passWord: password,
+          userEmail: "hb@gmail.com",
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           success: (success: any) => {
+            // biome-ignore lint/suspicious/noConsoleLog: <explanation>
             console.log(success, "joined vayo hai")
           },
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           error: (error: any) => {
+            // biome-ignore lint/suspicious/noConsoleLog: <explanation>
             console.log(error)
           },
         })
       },
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       error: (error: any) => {
+        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
         console.log(error)
       },
     })
   }
 
   return (
-    <div className="App">
-      <main className="flex justify-center flex-col items-center gap-4">
-        <h1>Zoom Meeting SDK Sample React</h1>
-        <div className="h-[350px] w-[350px] rounded-md bg-black/50 flex justify-center items-center">
-          <Image
-            src={"/user.png"}
-            height={300}
-            width={300}
-            alt="user"
-            className="rounded-md object-cover"
-          />
-        </div>
-        <button
-          className="bg-black/50 text-white rounded hover:bg-black/40 h-10 w-fit p-2"
-          onClick={getSignature}
-        >
-          Join Meeting
-        </button>
-      </main>
-    </div>
+    <>
+      <div id="zmmtg-root" />
+    </>
   )
 }
 

@@ -16,7 +16,8 @@
     "jsrsasign": "^11.1.0",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.6",

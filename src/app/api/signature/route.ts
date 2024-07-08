@@ -12,8 +12,8 @@ async function postController<T>(
     meetingNumber?: number
     role: number
   }
-  const client_id = "qDflymgPSCSuGSlJ_bg5Bw"
-  const client_secret = "U6dB0icEBRlsqrByoOgM1D7XvlX3wYsz"
+  const client_id = "4g05DuyUQsmHtpyBBXFrMw"
+  const client_secret = "RN4vQsZd4zuDNZdt6a4950rE19rOm5QJ"
 
   const iat = Math.round(new Date().getTime() / 1000) - 30
   const exp = iat + 60 * 60 * 2

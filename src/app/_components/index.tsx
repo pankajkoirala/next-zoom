@@ -3,14 +3,15 @@
 import { useEffect } from "react"
 import { useGetSignature } from "../_hooks"
 
-const leaveUrl = "http://localhost:3000/en/test"
-const meetingNumber = 86857530517
-const password = "45qq4a"
-const client_id = "qDflymgPSCSuGSlJ_bg5Bw"
-const client_secret = "U6dB0icEBRlsqrByoOgM1D7XvlX3wYsz"
+const leaveUrl = "http://localhost:3000/leave"
+// const meetingNumber = 87423603407
+// const password = "uL3KBH"
+const client_id = "4g05DuyUQsmHtpyBBXFrMw"
+const client_secret = "RN4vQsZd4zuDNZdt6a4950rE19rOm5QJ"
 
 const initZoom = async () => {
   const { ZoomMtg } = await import("@zoom/meetingsdk")
+
   ZoomMtg.setZoomJSLib("https://source.zoom.us/3.6.0/lib", "/av")
   ZoomMtg.preLoadWasm()
   ZoomMtg.prepareWebSDK()
@@ -19,7 +20,13 @@ const initZoom = async () => {
   return ZoomMtg
 }
 
-function Zoom() {
+function Zoom({
+  meetingNumber,
+  password,
+}: {
+  meetingNumber: number
+  password: string
+}) {
   const { mutateAsync } = useGetSignature()
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -76,7 +83,6 @@ function Zoom() {
           sdkKey: client_id,
           meetingNumber: meetingNumber,
           signature: signature,
-
           userName: "hari bahadur",
           passWord: password,
           userEmail: "hb@gmail.com",

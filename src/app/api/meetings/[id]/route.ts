@@ -34,7 +34,6 @@ async function deleteController<T>(
 ): Promise<NextResponse<any | ApiErrorType<unknown>>> {
   const access_token = await getAccessTokenFn()
   // Get all meetings with pagination
-  console.log(params?.params?.id, "xxxxxxxxxxxxxxxxxxxxxx pa")
 
   const meetingsUrl = `https://api.zoom.us/v2/meetings/${params?.params?.id}`
   try {
@@ -44,7 +43,6 @@ async function deleteController<T>(
         "Content-Type": "application/json",
       },
     })
-    console.log(res?.data, "xxxxxxxxxxxxxxxxxxxxxx")
 
     return NextResponse.json(res?.data)
   } catch (error) {

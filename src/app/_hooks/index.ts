@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
+import { MeetingData } from "../_components/create-meeting-dialog"
 
 export type Prettify<T> = {
   [key in keyof T]: T[key]
@@ -31,7 +32,7 @@ export const useGetSignature = () => {
 }
 
 export const useCreateMeeting = () => {
-  return useMutation<GetSignatureType, ApiErrorType<null>>({
+  return useMutation<GetSignatureType, ApiErrorType<null>, MeetingData>({
     mutationKey: ["create-meeting"],
     mutationFn: (data) => axios.post("/api/create-meeting", data),
   })

@@ -3,11 +3,8 @@
 import { useEffect } from "react"
 import { useGetSignature } from "../_hooks"
 
-const leaveUrl = "http://localhost:3000/leave"
-// const meetingNumber = 87423603407
-// const password = "uL3KBH"
-const client_id = "4g05DuyUQsmHtpyBBXFrMw"
-const client_secret = "RN4vQsZd4zuDNZdt6a4950rE19rOm5QJ"
+const leaveUrl = "http://localhost:3000"
+const client_id = process.env.NEXT_ZOOM_SDK_CLIENT_ID
 
 const initZoom = async () => {
   const { ZoomMtg } = await import("@zoom/meetingsdk")
@@ -16,16 +13,21 @@ const initZoom = async () => {
   ZoomMtg.preLoadWasm()
   ZoomMtg.prepareWebSDK()
   ZoomMtg.i18n.load("en-US")
-
   return ZoomMtg
 }
 
 function Zoom({
   meetingNumber,
   password,
+  userName,
+  userEmail,
+  isHost,
 }: {
   meetingNumber: number
   password: string
+  userName: string
+  userEmail: string
+  isHost: boolean
 }) {
   const { mutateAsync } = useGetSignature()
 
@@ -34,7 +36,7 @@ function Zoom({
     initZoom().then(async (ZoomMtg) => {
       const signature = await mutateAsync({
         meetingNumber: `${meetingNumber}`,
-        role: "1",
+        role: isHost ? "1" : "0",
       })
 
       if (signature?.data) {
@@ -83,9 +85,9 @@ function Zoom({
           sdkKey: client_id,
           meetingNumber: meetingNumber,
           signature: signature,
-          userName: "hari bahadur",
+          userName: userName,
           passWord: password,
-          userEmail: "hb@gmail.com",
+          userEmail: userEmail,
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           success: (success: any) => {
             // biome-ignore lint/suspicious/noConsoleLog: <explanation>

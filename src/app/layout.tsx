@@ -20,7 +20,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReactQueryClientProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <div className="text-4xl text-[#2d8cff] w-full text-center py-8">
+              Welcome To &nbsp;
+              <span className="text-[#2d8cff] font-semibold">Zoom</span>
+            </div>
+            {children}
+          </ToastProvider>
         </ReactQueryClientProvider>
       </body>
     </html>

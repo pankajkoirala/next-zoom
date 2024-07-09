@@ -69,6 +69,7 @@ export function CreateMeetingDialog({
               id="start_time"
               type="datetime-local"
               value={data?.start_time}
+              min={new Date().toISOString().split("T")[0] + "T00:00"}
               className="border border-gray-200 w-full rounded-md p-2 text-base"
             />
           </div>
@@ -87,7 +88,7 @@ export function CreateMeetingDialog({
           <div className="w-1/2 flex items-center gap-2 justify-end">
             <button
               onClick={onClose}
-              className="  rounded-md p-1 bg-red-400 text-white"
+              className="  rounded-md py-1  px-2 bg-red-400 text-white"
             >
               Cancel
             </button>
@@ -98,8 +99,13 @@ export function CreateMeetingDialog({
                 !data?.duration ||
                 !data?.password
               }
-              onClick={() => submit(data)}
-              className="rounded-md p-1 bg-black text-white disabled:cursor-not-allowed"
+              onClick={() =>
+                submit({
+                  ...data,
+                  start_time: new Date(data?.start_time).toISOString(),
+                })
+              }
+              className="rounded-md py-1  px-2 bg-black text-white disabled:cursor-not-allowed"
             >
               {isPending ? "Loading..." : "Create"}
             </button>

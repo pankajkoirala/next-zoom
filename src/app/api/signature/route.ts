@@ -12,8 +12,8 @@ async function postController<T>(
     meetingNumber?: number
     role: number
   }
-  const client_id = "4g05DuyUQsmHtpyBBXFrMw"
-  const client_secret = "RN4vQsZd4zuDNZdt6a4950rE19rOm5QJ"
+  const client_id = process.env.NEXT_ZOOM_SDK_CLIENT_ID
+  const client_secret = process.env.NEXT_ZOOM_SDK_SECRET_ID
 
   const iat = Math.round(new Date().getTime() / 1000) - 30
   const exp = iat + 60 * 60 * 2

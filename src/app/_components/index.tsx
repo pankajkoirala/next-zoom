@@ -5,6 +5,7 @@ import { useGetSignature } from "../_hooks"
 
 const leaveUrl = "http://localhost:3000"
 const client_id = process.env.NEXT_ZOOM_SDK_CLIENT_ID
+console.log(client_id, "xxxxxxxxxxxxxxxxxxxxxxxx")
 
 const initZoom = async () => {
   const { ZoomMtg } = await import("@zoom/meetingsdk")
@@ -36,7 +37,7 @@ function Zoom({
     initZoom().then(async (ZoomMtg) => {
       const signature = await mutateAsync({
         meetingNumber: `${meetingNumber}`,
-        role: isHost ? "1" : "0",
+        role: isHost ? "1" : "1",
       })
 
       if (signature?.data) {
